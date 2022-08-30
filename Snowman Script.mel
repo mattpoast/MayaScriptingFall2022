@@ -1,0 +1,90 @@
+//Create Snowman Base_Geo and Position
+polySphere -name Base_Geo -radius 5 -subdivisionsX 20 -subdivisionsY 20;
+move -moveY 5;
+
+//Create Snowman Mid_Geo and Move to Correct Position
+polySphere -name Mid_Geo -radius 3.5 -subdivisionsX 20 -subdivisionsY 20;
+move -moveY 11.8;
+
+//Create Snowman Head_Geo and Move to Correct Position
+polySphere -name Head_Geo -radius 2.25 -subdivisionsX 20 -subdivisionsY 20;
+move -moveY 16.7;
+
+//Grouping Snowman Body Together
+group -name Body_Geo Base_Geo Mid_Geo Head_Geo;
+
+//Creating Hat Geo
+polyCylinder -name Hat_Geo -radius 1.5 -height 3 -subdivisionsAxis 12 -subdivisionsCaps 1;
+move -moveY 19.7;
+
+//Creating holding spans for Hat
+select Hat_Geo.e[24:35];
+polySplitRing -smoothingAngle 30 -weight 0.15;
+select Hat_Geo.e[60:61] Hat_Geo.e[63] Hat_Geo.e[65] Hat_Geo.e[67] Hat_Geo.e[69] Hat_Geo.e[71] Hat_Geo.e[73] Hat_Geo.e[75] Hat_Geo.e[77] Hat_Geo.e[79] Hat_Geo.e[81];
+polySplitRing -smoothingAngle 30 -weight 0.95;
+
+//Extruding Hat Brim
+select Hat_Geo.f[0:11];
+polyExtrudeFacet -thickness 0.5;
+
+//More Hat Holding Spans
+select Hat_Geo.e[48:49] Hat_Geo.e[51] Hat_Geo.e[53] Hat_Geo.e[55] Hat_Geo.e[57] Hat_Geo.e[59] Hat_Geo.e[61] Hat_Geo.e[63] Hat_Geo.e[65] Hat_Geo.e[67] Hat_Geo.e[69];
+polySplitRing -smoothingAngle 30 -weight 0.025;
+
+select Hat_Geo.e[100] Hat_Geo.e[103] Hat_Geo.e[107] Hat_Geo.e[112] Hat_Geo.e[117] Hat_Geo.e[122] Hat_Geo.e[127] Hat_Geo.e[132] Hat_Geo.e[137] Hat_Geo.e[142] Hat_Geo.e[147] Hat_Geo.e[152];
+polySplitRing -smoothingAngle 30 -weight 0.1;
+
+select Hat_Geo.e[180:181] Hat_Geo.e[183] Hat_Geo.e[185] Hat_Geo.e[187] Hat_Geo.e[189] Hat_Geo.e[191] Hat_Geo.e[193] Hat_Geo.e[195] Hat_Geo.e[197] Hat_Geo.e[199] Hat_Geo.e[201] ;
+polySplitRing -smoothingAngle 30 -weight 0.85;
+
+//Parenting Hat to Head
+parent Hat_Geo Head_Geo;
+
+//Creating the Nose 
+polyCylinder -name Nose_Geo -radius 1 -height 3 -subdivisionsAxis 8 -subdivisionsCaps 1;
+select Nose_Geo.f[16:23];
+scale -relative -pivot 5.96046e-08cm 1.5cm 2.98023e-08cm 0.12 0.12 0.12;
+
+//Carrot Ridges
+select Nose_Geo.e[16:23];
+polySplitRing -smoothingAngle 30 -splitType 2 -divisions 8;
+select -clear;
+select -add Nose_Geo.e[154] Nose_Geo.e[156] Nose_Geo.e[158] Nose_Geo.e[160] Nose_Geo.e[162] Nose_Geo.e[164] Nose_Geo.e[166:167] ;
+select -add Nose_Geo.e[122] Nose_Geo.e[124] Nose_Geo.e[126] Nose_Geo.e[128] Nose_Geo.e[130] Nose_Geo.e[132] Nose_Geo.e[134:135] ;
+select -add Nose_Geo.e[90] Nose_Geo.e[92] Nose_Geo.e[94] Nose_Geo.e[96] Nose_Geo.e[98] Nose_Geo.e[100] Nose_Geo.e[102:103] ;
+select -add Nose_Geo.e[58] Nose_Geo.e[60] Nose_Geo.e[62] Nose_Geo.e[64] Nose_Geo.e[66] Nose_Geo.e[68] Nose_Geo.e[70:71] ;
+scale -componentSpace -relative 0.8 0.8 0.8;
+select Nose_Geo.f[8:15];
+doDelete;
+
+//Bend Nose_Geo
+select Nose_Geo;
+nonLinear -type bend -curvature 55 -lowBound 0 -highBound 1;
+select Nose_Geo;
+DeleteHistory;
+
+//Position Nose_Geo and Parent
+rotate -relative 90 0 270;
+move -relative 0 16.6 3.5;
+parent Nose_Geo Head_Geo;
+
+//Creating Eyes_Geo
+polySphere -name Eye_Geo -axis 0 0 1 -radius 0.25 -subdivisionsX 8 -subdivisionsY 8;
+scale -relative 1 1 0.5;
+move -relative 0.596 17.738 1.9;
+rotate -relative -22.447 12.604 4.804;
+
+//Mirroring Eye_Geo
+polyMirrorFace;
+
+//Parenting Eye_Geo to Head_Geo
+parent Eye_Geo Head_Geo;
+
+//Deleting History, Freezing Transforms, Center Pivot, and smoothing
+select Body_Geo;
+displaySmoothness -divisionsU 3 -divisionsV 3 -pointsWire 16 -pointsShaded 4 -polygonObject 3;
+FreezeTransformations;
+DeleteHistory;
+CenterPivot;
+
+
