@@ -1,0 +1,47 @@
+float $sizeMultiplier = 0.666;
+float $baseRadius = 5;
+float $midRadius = ($baseRadius * $sizeMultiplier);
+float $headRadius = ($midRadius * $sizeMultiplier);
+float $hatRadius = ($headRadius * $sizeMultiplier);
+
+//Create Base and move to Position
+polySphere -name Base_Geo -radius $baseRadius;
+move -relative 0 $baseRadius 0;
+
+//Creates Mid and moves to Position based on the Size Multiplier
+polySphere -name Mid_Geo -radius $midRadius;
+move -relative 0 (($baseRadius * 2) + ($midRadius)) 0;
+
+//Creates Head and moves to Position based on the Size Multiplier
+polySphere -name Head_Geo -radius ($headRadius);
+move -relative 0 (($baseRadius * 2) + ($midRadius * 2) + ($headRadius)) 0;
+
+//Creates Hat and moves to Position based on the Size Multiplier
+
+//Creating Hat Geo
+polyCylinder -name Hat_Geo -radius ($hatRadius) -height ($hatRadius * 3) -subdivisionsAxis 12 -subdivisionsCaps 1;
+move -relative 0 (($baseRadius * 2) + ($midRadius * 2) + ($headRadius * 2) + ($hatRadius)) 0;
+
+//Creating holding spans for Hat
+select Hat_Geo.e[24:35];
+polySplitRing -smoothingAngle 30 -weight 0.15;
+select Hat_Geo.e[60:61] Hat_Geo.e[63] Hat_Geo.e[65] Hat_Geo.e[67] Hat_Geo.e[69] Hat_Geo.e[71] Hat_Geo.e[73] Hat_Geo.e[75] Hat_Geo.e[77] Hat_Geo.e[79] Hat_Geo.e[81];
+polySplitRing -smoothingAngle 30 -weight 0.95;
+
+//Extruding Hat Brim
+select Hat_Geo.f[0:11];
+polyExtrudeFacet -thickness 0.5;
+
+//More Hat Holding Spans
+select Hat_Geo.e[48:49] Hat_Geo.e[51] Hat_Geo.e[53] Hat_Geo.e[55] Hat_Geo.e[57] Hat_Geo.e[59] Hat_Geo.e[61] Hat_Geo.e[63] Hat_Geo.e[65] Hat_Geo.e[67] Hat_Geo.e[69];
+polySplitRing -smoothingAngle 30 -weight 0.025;
+
+select Hat_Geo.e[100] Hat_Geo.e[103] Hat_Geo.e[107] Hat_Geo.e[112] Hat_Geo.e[117] Hat_Geo.e[122] Hat_Geo.e[127] Hat_Geo.e[132] Hat_Geo.e[137] Hat_Geo.e[142] Hat_Geo.e[147] Hat_Geo.e[152];
+polySplitRing -smoothingAngle 30 -weight 0.1;
+
+select Hat_Geo.e[180:181] Hat_Geo.e[183] Hat_Geo.e[185] Hat_Geo.e[187] Hat_Geo.e[189] Hat_Geo.e[191] Hat_Geo.e[193] Hat_Geo.e[195] Hat_Geo.e[197] Hat_Geo.e[199] Hat_Geo.e[201] ;
+polySplitRing -smoothingAngle 30 -weight 0.85;
+
+//Smoothing
+displaySmoothness -divisionsU 3 -divisionsV 3 -pointsWire 16 -pointsShaded 4 -polygonObject 3;
+select -clear;
