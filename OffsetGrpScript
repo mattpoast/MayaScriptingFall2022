@@ -2,5 +2,7 @@ proc OffsetGroup()
 {
 string $selectedName[] = `ls -sl`;
 group -name ($selectedName[0] + "_Grp") $selectedName;
+select -add $selectedName;
+matchTransform -piv;
 }
 OffsetGroup();
