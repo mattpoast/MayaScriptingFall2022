@@ -1,0 +1,28 @@
+float $stepLength = 5;
+float $stepThickness = 1;
+float $stepDepth = 1;
+int $stepAmount = 20;
+float $stepHeight = 1;
+float $stepRotate = 25;
+float $stepSpread = 0;
+
+polyCube -name Stair -w $stepLength -h $stepThickness -d $stepDepth;
+move -relative ($stepLength + $stepSpread) ($stepHeight / 2) 0;
+move 0 0 0 Stair.scalePivot Stair.rotatePivot;
+
+duplicate;
+move -r 0 $stepHeight 0;
+rotate -r 0 $stepRotate 0;
+
+for ($i = $stepAmount; $i > 0; --$i)
+{
+duplicate -smartTransform;
+}
+
+select -all;
+proc OffsetGroup()
+{
+string $selectedName[] = `ls -sl`;
+group -name ($selectedName[1] + "_Grp") $selectedName;
+}
+OffsetGroup();
