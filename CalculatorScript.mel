@@ -1,0 +1,20 @@
+
+global proc CalculatorUI()
+{
+    string $myWindow = "CalcWindow";
+    
+if (`window -exists $myWindow`)
+{
+    deleteUI $myWindow;
+}
+
+$myWindow = `window -title "My Windy" 
+                        -widthHeight 300 400`;
+
+columnLayout;
+textField;
+
+showWindow $myWindow;
+
+}
+CalculatorUI();
