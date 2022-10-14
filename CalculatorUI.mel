@@ -15,6 +15,8 @@ for ($i=0; $i<(size($input)); $i++)
     }
 }
 print ($sum + "\n");
+string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Subtraction(float $input[])
@@ -34,6 +36,8 @@ proc Subtraction(float $input[])
     }
     }
     print ($sum + $input[0] + "\n");
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Multiplication(float $input[])
@@ -62,6 +66,8 @@ proc Multiplication(float $input[])
     }
     }
     print ($sum + "\n");
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Division(float $input[])
@@ -89,6 +95,8 @@ proc Division(float $input[])
     }
     }
     print ($sum + "\n");
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Power(float $input[])
@@ -116,6 +124,8 @@ proc Power(float $input[])
     }
     }
     print ($sum + "\n");
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Average(float $input[])
@@ -128,6 +138,8 @@ proc Average(float $input[])
     }
     $sum = ($sum / $size);
     print ("The Average is " + $sum + "\n"); 
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Median(float $input[])
@@ -148,6 +160,8 @@ proc Median(float $input[])
         $sum = $input[$median];
     }
     print ("The Median is " + $sum + "\n"); 
+    string $sumInput = `optionVar -q "sumFieldVar"`;
+textField -e -text ($sum) $sumInput;
 }
 
 proc Calculate(float $input[], string $operator) 
@@ -168,15 +182,15 @@ proc Calculate(float $input[], string $operator)
     {
         Division($input);
     }
-      else if ($operator == "Power")
+      else if ($operator == 5)
     {
         Power($input);
     }
-     else if ($operator == "Average")
+     else if ($operator == 6)
     {
         Average($input);
     }
-    else if ($operator == "Median")
+    else if ($operator == 7)
     {
         Median($input);
     }
@@ -190,14 +204,14 @@ proc Calculate(float $input[], string $operator)
 
 global proc CalculateButton()
 {
-    string $operationField = `optionVar -q "operationField"`;
+   string $operationCollection = `optionVar -q "radioCollectionCalculator"`;
+   string $operationSelection = `radioCollection -q -select $operationCollection`;
+   int $operationInput = `radioButton -q -data $operationSelection`;
 
-    string $operation = `radioButtonGrp -  q -select $operationField`;
-    Calculate ({3, 5, 1}, $operationField);
+   Calculate({2, 3, 4}, $operationInput);
 }
 
-
-global proc CalculatorUI()
+proc CalculatorUI()
 {
     string $calculatorWindow = "CalcWindow";
     
@@ -207,21 +221,35 @@ if (`window -exists $calculatorWindow`)
 }
 
 string $calculatorWindow = `window -title "Calculator" 
-                        -widthHeight 400 400 
+                        -widthHeight 300 300 
                         -resizeToFitChildren 1
                         $calculatorWindow`;
 
 string $arrayInputColumn = `columnLayout 
                             -parent $calculatorWindow
                             -adjustableColumn 1`;
-textField;
-columnLayout;
-optionVar -stringValue "operationField" `radioButtonGrp 
-          -numberOfRadioButtons 4 
-          -labelArray4 "+" "-" "*" "/"`;
-button -label "Calculate" -command "CalculateButton";
 
+string $textInput = `textField -parent $arrayInputColumn`;
+string $deeznuts = `optionVar -stringValue "arrayInput" $textInput`;
+
+string $radioLayout = `rowLayout -parent $arrayInputColumn 
+                                 -numberOfColumns 7`;
+string $calculatorRadioCollection = `radioCollection`;
+optionVar -stringValue "radioCollectionCalculator" $calculatorRadioCollection;
+
+radioButton -parent $radioLayout -data 1 -label "+";
+radioButton -parent $radioLayout -data 2 -label "-";
+radioButton -parent $radioLayout -data 3 -label "*";
+radioButton -parent $radioLayout -data 4 -label "/";
+radioButton -parent $radioLayout -data 5 -label "Power";
+radioButton -parent $radioLayout -data 6 -label "Average";
+radioButton -parent $radioLayout -data 7 -label "Median";
+string $calculateButtonColumn = `columnLayout -parent $arrayInputColumn -adjustableColumn 1`;
+button -label "Calculate" -command "CalculateButton";
+string $sumField = `textField -enable 0`;
+optionVar -stringValue "sumFieldVar" $sumField;
 showWindow $calculatorWindow;
 
 }
 CalculatorUI();
+
