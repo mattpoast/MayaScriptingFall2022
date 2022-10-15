@@ -1,0 +1,106 @@
+
+
+global proc RandomNumberGenerator()
+{
+
+string $selection[] = `ls -sl`;
+
+string $amountField = `optionVar -q "duplicateOptionVar"`;
+int $amount = `intField -q -value $amountField`;
+
+string $xMinField = `optionVar -q "xMinField"`;
+float $xMin = `floatField -q -value $xMinField`;
+
+string $xMaxField = `optionVar -q "xMaxField"`;
+float $xMax = `floatField -q -value $xMaxField`;
+
+string $yMinField = `optionVar -q "yMinField"`;
+float $yMin = `floatField -q -value $yMinField`;
+
+string $yMaxField = `optionVar -q "yMaxField"`;
+float $yMax = `floatField -q -value $yMaxField`;
+
+string $zMinField = `optionVar -q "zMinField"`;
+float $zMin = `floatField -q -value $zMinField`;
+
+string $zMaxField = `optionVar -q "zMaxField"`;
+float $zMax = `floatField -q -value $zMaxField`;
+
+
+for ($i=0; $i<($amount -1); $i++)
+{
+duplicate $selection;
+
+float $randomXValue = rand ($xMin, $xMax);
+
+float $randomYValue = rand ($yMin, $yMax);
+
+float $randomZValue = rand ($zMin, $zMax);
+
+move $randomXValue $randomYValue $randomZValue;
+
+select -clear;
+select -add $selection;
+
+}
+
+
+//int $value = rand (0,10);
+}
+
+global proc RandomDuplicateUI()
+{
+string $randomizerWindow = "randomDuplicateWindow";
+if(`window -exists $randomizerWindow`)
+{
+    deleteUI $randomizerWindow;
+}
+
+
+$randomizerWindow = `window -title "Duplicate Random"
+                            -widthHeight 400 400
+                            -resizeToFitChildren 1
+                            $randomizerWindow`;
+string $amountInputField = `columnLayout 
+                            -parent $randomizerWindow 
+                            -adjustableColumn 1`;
+
+text -label "Duplicate Amount" -noBackground 1;
+
+optionVar -stringValue "duplicateOptionVar" `intField`;
+
+string $xInputColumn = `columnLayout -parent $randomizerWindow -adjustableColumn 1`;
+rowLayout -numberOfColumns 2;
+text -label "X Min" -noBackground 1;
+text -label "X Max" -noBackground 1;
+rowLayout -numberOfColumns 2 -parent $xInputColumn;
+
+optionVar -stringValue "xMinField" `floatField`;
+optionVar -stringValue "xMaxField" `floatField`;
+
+rowLayout -numberOfColumns 2 -parent $xInputColumn;
+text -label "Y Min" -noBackground 1;
+text -label "Y Max" -noBackground 1;
+
+string $yInputColumn = `columnLayout -parent $xInputColumn`;
+rowLayout -numberOfColumns 2 -parent $yInputColumn;
+
+optionVar -stringValue "yMinField" `floatField`;
+optionVar -stringValue "yMaxField" `floatField`;
+
+
+rowLayout -numberOfColumns 2 -parent $xInputColumn;
+text -label "Z Min" -noBackground 1;
+text -label "Z Max" -noBackground 1;
+
+string $zInputColumn = `columnLayout -parent $xInputColumn`;
+rowLayout -numberOfColumns 2 -parent $zInputColumn;
+
+optionVar -stringValue "zMinField" `floatField`;
+optionVar -stringValue "zMaxField" `floatField`;
+
+string $duplicateButton = `button -label "Duplicate" -parent $xInputColumn 
+                           -command "RandomNumberGenerator"`;
+showWindow $randomizerWindow;
+}
+RandomDuplicateUI();
